@@ -1,0 +1,19 @@
+node_modules/
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+*.log
+tmp/
+exports/
+
+# Database backups and generated files
+backups/
+*.sql
+*.xlsx
+
+# Local editor and OS files
+.vscode/
+.DS_Store
+Thumbs.db
