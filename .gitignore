@@ -1,0 +1,21 @@
+node_modules/
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+*.log
+tmp/
+exports/
+
+# Database backups and generated files
+backups/
+*.sql
+*.xlsx
+# File migrasi skema TETAP di-track (jangan di-ignore)
+!database/migrations/*.sql
+
+# Local editor and OS files
+.vscode/
+.DS_Store
+Thumbs.db

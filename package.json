@@ -1,0 +1,23 @@
+{
+  "name": "lunifar-overtime-bot",
+  "version": "1.0.0",
+  "description": "Bot Telegram pencatatan lembur karyawan",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "node --test",
+    "check": "node --check src/app.js && node --check src/bot/index.js && node --check src/services/overtime.service.js && node --check src/services/approval.service.js && node --check src/services/report.service.js && echo OK",
+    "db:check": "node scripts/db-check.js",
+    "db:migrate": "node scripts/db-migrate.js",
+    "validate-env": "node scripts/validate-env.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "mysql2": "^3.11.0",
+    "telegraf": "^4.16.3"
+  }
+}
