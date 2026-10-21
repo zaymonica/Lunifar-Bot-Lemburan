@@ -6,7 +6,7 @@ const { createPool } = require('../src/config/database');
 
 (async () => {
   try {
-    const cfg = loadEnv();
+    const cfg = loadEnv({ requireBotToken: false });
     const pool = createPool(cfg.db);
     const [rows] = await pool.query('SELECT VERSION() AS v, UTC_TIMESTAMP() AS utc_now');
     console.log(`✅ Koneksi OK — MySQL/MariaDB versi: ${rows[0].v}, UTC server: ${rows[0].utc_now}`);

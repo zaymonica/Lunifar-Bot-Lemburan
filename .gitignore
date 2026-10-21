@@ -19,3 +19,8 @@ backups/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Bundle deploy cPanel (duplikat src/) & artefak build
+deploy-staging/
+*.zip
+src/*.backup

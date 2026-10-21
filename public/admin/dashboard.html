@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- CSRF token sesi saat ini (synchronizer token; juga tersedia via /api/auth/me) -->
+  <meta name="csrf-token" content="__CSRF_TOKEN__">
+  <title>Dashboard Admin — Lunifar Overtime Bot</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <h1>Admin Lunifar</h1>
+      <div class="top-actions">
+        <span id="whoami">…</span>
+        <button id="logout-btn" type="button">Logout</button>
+      </div>
+    </header>
+    <nav class="tabs" id="tabs">
+      <button type="button" data-tab="dashboard" class="active">Ringkasan</button>
+      <button type="button" data-tab="employees">Pegawai</button>
+      <button type="button" data-tab="overtime">Lembur</button>
+      <button type="button" data-tab="reports">Laporan</button>
+      <button type="button" data-tab="bot">Bot</button>
+      <button type="button" data-tab="audit">Audit</button>
+    </nav>
+
+    <section id="tab-dashboard" class="tab active">
+      <div id="dash-cards" class="cards"></div>
+      <h2>Persetujuan tertunda</h2>
+      <div id="dash-pending"></div>
+    </section>
+
+    <section id="tab-employees" class="tab">
+      <form id="emp-filter" class="row">
+        <input id="emp-search" type="text" placeholder="Cari nama/nip" maxlength="80">
+        <select id="emp-status">
+          <option value="">Semua status</option>
+          <option value="pending">pending</option>
+          <option value="active">active</option>
+          <option value="rejected">rejected</option>
+          <option value="inactive">inactive</option>
+        </select>
+        <button type="submit">Tampilkan</button>
+      </form>
+      <div id="emp-list"></div>
+    </section>
+
+    <section id="tab-overtime" class="tab">
+      <h2>Persetujuan tertunda</h2>
+      <div id="ot-pending"></div>
+      <h2>Riwayat</h2>
+      <form id="ot-filter" class="row">
+        <input id="ot-from" type="date">
+        <input id="ot-to" type="date">
+        <select id="ot-status">
+          <option value="">Semua status</option>
+          <option value="active">active</option>
+          <option value="pending">pending</option>
+          <option value="approved">approved</option>
+          <option value="rejected">rejected</option>
+          <option value="completed">completed</option>
+        </select>
+        <button type="submit">Tampilkan</button>
+      </form>
+      <div id="ot-list"></div>
+    </section>
+
+    <section id="tab-reports" class="tab">
+      <h2>Rekap rentang tanggal</h2>
+      <form id="rep-form" class="row">
+        <input id="rep-from" type="date" required>
+        <input id="rep-to" type="date" required>
+        <button type="submit">Tampilkan</button>
+        <button type="button" id="rep-export">Unduh Excel</button>
+      </form>
+      <div id="rep-out"></div>
+      <h2>Payroll bulanan</h2>
+      <form id="pay-form" class="row">
+        <input id="pay-month" type="number" min="1" max="12" value="10">
+        <input id="pay-year" type="number" min="2000" max="2100" value="2026">
+        <button type="submit">Tampilkan</button>
+        <button type="button" id="pay-export">Unduh Excel</button>
+      </form>
+      <div id="pay-out"></div>
+    </section>
+
+    <section id="tab-bot" class="tab">
+      <div id="bot-status" class="cards"></div>
+      <div class="row">
+        <button type="button" id="bot-start">Start</button>
+        <button type="button" id="bot-stop">Stop</button>
+        <button type="button" id="bot-restart">Restart</button>
+      </div>
+      <h2>Token bot</h2>
+      <form id="token-form" class="row">
+        <input id="token-input" type="password" placeholder="123456:ABC-DEF…" autocomplete="off">
+        <button type="submit">Simpan</button>
+        <button type="button" id="token-test">Simpan + Uji</button>
+        <button type="button" id="token-clear">Hapus</button>
+      </form>
+      <p id="token-info" class="msg"></p>
+      <p class="hint">Disimpan terenkripsi (AES-256-GCM). Token tidak pernah ditampilkan utuh kembali.</p>
+    </section>
+
+    <section id="tab-audit" class="tab">
+      <div id="audit-list"></div>
+      <div class="row"><button type="button" id="audit-more">Muat lebih banyak</button></div>
+    </section>
+
+    <p id="flash" class="msg"></p>
+  </main>
+  <script src="/admin/dashboard.js"></script>
+</body>
+</html>

@@ -5,8 +5,9 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
+    "web": "node src/web/server.js",
     "test": "node --test",
-    "check": "node --check src/app.js && node --check src/bot/index.js && node --check src/services/overtime.service.js && node --check src/services/approval.service.js && node --check src/services/report.service.js && echo OK",
+    "check": "node --check src/app.js && node --check src/bot/index.js && node --check src/services/overtime.service.js && node --check src/services/approval.service.js && node --check src/services/report.service.js && node --check src/web/server.js && node --check src/config/env.js && echo OK",
     "db:check": "node scripts/db-check.js",
     "db:migrate": "node scripts/db-migrate.js",
     "validate-env": "node scripts/validate-env.js"
@@ -15,8 +16,12 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "exceljs": "^4.4.0",
+    "express": "^4.22.3",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
     "mysql2": "^3.11.0",
     "telegraf": "^4.16.3"
   }

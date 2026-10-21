@@ -1,5 +1,8 @@
 'use strict';
-require('dotenv').config();
+const path = require('path');
+// Muat .env dari root proyek secara eksplisit — tidak bergantung pada CWD
+// proses (mis. server di-start dari direktori lain / script background).
+require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
 
 const REQUIRED_VARS = ['BOT_TOKEN', 'DB_HOST', 'DB_USER', 'DB_NAME'];
 // DB_PASSWORD boleh string kosong (mis. root tanpa password di MySQL XAMPP lokal),
@@ -11,9 +14,13 @@ function parseAdminIds(raw) {
   return raw.split(',').map((s) => s.trim()).filter((s) => /^\d+$/.test(s)).map(Number);
 }
 
-function loadEnv() {
-  const missing = MUST_EXIST_VARS.filter((k) => process.env[k] === undefined || process.env[k] === null);
-  const empty = REQUIRED_VARS.filter((k) => !String(process.env[k] ?? '').trim());
+function loadEnv({ requireBotToken = true } = {}) {
+  // BOT_TOKEN opsional hanya untuk Web Admin (token bisa diisi via UI Pengaturan;
+  // bot tidak pernah di-start otomatis oleh web). Mode bot (src/app.js) tetap wajib.
+  const requiredNow = requireBotToken ? REQUIRED_VARS : REQUIRED_VARS.filter((v) => v !== 'BOT_TOKEN');
+  const mustExistNow = requireBotToken ? MUST_EXIST_VARS : MUST_EXIST_VARS.filter((v) => v !== 'BOT_TOKEN');
+  const missing = mustExistNow.filter((k) => process.env[k] === undefined || process.env[k] === null);
+  const empty = requiredNow.filter((k) => !String(process.env[k] ?? '').trim());
   const problems = [...new Set([...missing, ...empty])];
   if (problems.length > 0) {
     const err = new Error(`Konfigurasi environment wajib belum tersedia: ${problems.join(', ')}. Salin .env.example menjadi .env dan isi nilainya. (DB_PASSWORD boleh string kosong untuk MySQL lokal tanpa password.)`);
@@ -76,4 +83,34 @@ function assertMigrationTarget(dbName, nodeEnv) {
   return true;
 }
 
-module.exports = { loadEnv, parseAdminIds, assertMigrationTarget, DEV_ALLOWED_MIGRATION_DBS };
+/**
+ * Guard khusus penulisan Web Admin (migration web / bootstrap akun).
+ * Lebih ketat dari assertMigrationTarget: penulisan web di development
+ * HANYA boleh ke database testing yang terdaftar. Produksi harus diberi
+ * konfirmasi eksplisit via variabel env WEB_TARGET_CONFIRM=YES karena
+ * nama database produksi tidak dapat diverifikasi otomatis dari sini.
+ */
+function assertWebWriteTarget(dbName, nodeEnv, confirmEnv) {
+  if (nodeEnv === 'development') {
+    if (!DEV_ALLOWED_MIGRATION_DBS.includes(dbName)) {
+      const err = new Error(
+        `Target penulisan web ditolak: NODE_ENV=development hanya mengizinkan ` +
+        `database testing (${DEV_ALLOWED_MIGRATION_DBS.join(', ')}), target: "${dbName}".`
+      );
+      err.code = 'WEB_TARGET';
+      throw err;
+    }
+    return true;
+  }
+  if (confirmEnv !== 'YES') {
+    const err = new Error(
+      `Target penulisan web di lingkungan "${nodeEnv}" memerlukan konfirmasi eksplisit ` +
+      `env WEB_TARGET_CONFIRM=YES (verifikasi manual bahwa DB_NAME benar). Dibatalkan.`
+    );
+    err.code = 'WEB_TARGET';
+    throw err;
+  }
+  return true;
+}
+
+module.exports = { loadEnv, parseAdminIds, assertMigrationTarget, assertWebWriteTarget, DEV_ALLOWED_MIGRATION_DBS };

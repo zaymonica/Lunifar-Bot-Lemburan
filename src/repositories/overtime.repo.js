@@ -56,6 +56,12 @@ class OvertimeRepo {
     return rows;
   }
 
+  async countByStatus(conn) {
+    const c = conn || this.pool;
+    const [rows] = await c.execute('SELECT status, COUNT(*) AS cnt FROM overtime_sessions GROUP BY status');
+    return rows;
+  }
+
   async setDecision(sessionId, status, approverId, note, actualMinutes, payableMinutes, conn) {
     const c = conn || this.pool;
     const [res] = await c.execute(

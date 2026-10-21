@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="__CSRF_TOKEN__">
+  <title>Login Admin — Lunifar Overtime Bot</title>
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <main class="card">
+    <h1>Lunifar Overtime Bot</h1>
+    <h2>Login Admin</h2>
+    <form id="login-form" autocomplete="off">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" required maxlength="64" autocomplete="username">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required maxlength="128" autocomplete="current-password">
+      <button type="submit">Masuk</button>
+      <p id="msg" class="msg" role="status"></p>
+    </form>
+  </main>
+  <script src="/admin/login.js"></script>
+</body>
+</html>
